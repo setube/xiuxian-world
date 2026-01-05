@@ -1,0 +1,144 @@
+/**
+ * API 统一响应类型定义
+ */
+
+// ============ 响应类型 ============
+
+/**
+ * 成功响应类型
+ */
+export interface ApiSuccessResponse<T = unknown> {
+  code: 0
+  message: string
+  data: T
+  timestamp: number
+}
+
+/**
+ * 错误响应类型
+ */
+export interface ApiErrorResponse {
+  code: number
+  errorType: string
+  message: string
+  details?: unknown
+  timestamp: number
+}
+
+/**
+ * 统一响应类型
+ */
+export type ApiResponse<T = unknown> = ApiSuccessResponse<T> | ApiErrorResponse
+
+// ============ 类型守卫 ============
+
+/**
+ * 判断是否为成功响应
+ */
+export function isApiSuccess<T>(response: ApiResponse<T>): response is ApiSuccessResponse<T> {
+  return response.code === 0
+}
+
+/**
+ * 判断是否为错误响应
+ */
+export function isApiError(response: ApiResponse): response is ApiErrorResponse {
+  return response.code !== 0
+}
+
+// ============ 错误码常量（与后端同步） ============
+
+export const ERROR_CODES = {
+  // 成功
+  SUCCESS: 0,
+
+  // 通用错误 (1-99)
+  UNKNOWN_ERROR: 1,
+  VALIDATION_ERROR: 2,
+  NOT_FOUND: 3,
+  FORBIDDEN: 4,
+  INTERNAL_ERROR: 5,
+
+  // 认证模块 (1xxx)
+  AUTH_TOKEN_MISSING: 1001,
+  AUTH_TOKEN_INVALID: 1002,
+  AUTH_TOKEN_EXPIRED: 1003,
+  AUTH_INVALID_CREDENTIALS: 1004,
+  AUTH_USER_NOT_FOUND: 1005,
+  AUTH_USER_ALREADY_EXISTS: 1006,
+  AUTH_REFRESH_TOKEN_INVALID: 1007,
+  AUTH_ACCOUNT_DELETED: 1008,
+
+  // 玩家/角色模块 (2xxx)
+  PLAYER_NOT_AUTHENTICATED: 2001,
+  PLAYER_CHARACTER_NOT_FOUND: 2002,
+  PLAYER_CHARACTER_EXISTS: 2003,
+  PLAYER_INVALID_NAME: 2004,
+  PLAYER_SPIRIT_ROOT_INVALID: 2005,
+  PLAYER_NOT_ENOUGH_SPIRIT_STONES: 2006,
+
+  // 修炼模块 (3xxx)
+  CULTIVATION_NO_CHARACTER: 3001,
+  CULTIVATION_COOLDOWN: 3002,
+  CULTIVATION_ALREADY_IN_PROGRESS: 3003,
+  CULTIVATION_DEEP_NOT_ACTIVE: 3004,
+  CULTIVATION_DEEP_NOT_FINISHED: 3005,
+  CULTIVATION_PEACE_MODE_UNAVAILABLE: 3006,
+  CULTIVATION_POISON_CLEAR_FAILED: 3007,
+  CULTIVATION_BREAKTHROUGH_FAILED: 3008,
+
+  // 宗门模块 (4xxx)
+  SECT_NOT_MEMBER: 4001,
+  SECT_ALREADY_MEMBER: 4002,
+  SECT_NOT_FOUND: 4003,
+  SECT_REQUIREMENTS_NOT_MET: 4004,
+  SECT_LEAVE_COOLDOWN: 4005,
+  SECT_SALARY_ALREADY_CLAIMED: 4006,
+  SECT_CHECKIN_ALREADY_DONE: 4007,
+  SECT_TEACH_LIMIT_REACHED: 4008,
+  SECT_PROMOTE_REQUIREMENTS_NOT_MET: 4009,
+  SECT_CONTRIBUTION_NOT_ENOUGH: 4010,
+  SECT_ITEM_NOT_FOUND: 4011,
+  SECT_BOUNTY_NOT_FOUND: 4012,
+  SECT_BOUNTY_ALREADY_ACCEPTED: 4013,
+  SECT_BOUNTY_NOT_ACTIVE: 4014,
+  SECT_DONATE_INVALID_AMOUNT: 4015,
+
+  // 战斗模块 (5xxx) - 预留
+  BATTLE_NOT_AVAILABLE: 5001,
+  BATTLE_TARGET_NOT_FOUND: 5002,
+  BATTLE_IN_PEACE_MODE: 5003,
+
+  // 物品/背包模块 (6xxx) - 预留
+  ITEM_NOT_FOUND: 6001,
+  ITEM_NOT_ENOUGH: 6002,
+  INVENTORY_FULL: 6003
+} as const
+
+export type ErrorCode = (typeof ERROR_CODES)[keyof typeof ERROR_CODES]
+
+// ============ 错误类型常量 ============
+
+export const ERROR_TYPES = {
+  // 认证相关
+  AUTH_TOKEN_MISSING: 'AUTH_TOKEN_MISSING',
+  AUTH_TOKEN_INVALID: 'AUTH_TOKEN_INVALID',
+  AUTH_TOKEN_EXPIRED: 'AUTH_TOKEN_EXPIRED',
+  AUTH_INVALID_CREDENTIALS: 'AUTH_INVALID_CREDENTIALS',
+  AUTH_USER_NOT_FOUND: 'AUTH_USER_NOT_FOUND',
+  AUTH_USER_ALREADY_EXISTS: 'AUTH_USER_ALREADY_EXISTS',
+  AUTH_REFRESH_TOKEN_INVALID: 'AUTH_REFRESH_TOKEN_INVALID',
+  AUTH_ACCOUNT_DELETED: 'AUTH_ACCOUNT_DELETED',
+
+  // 玩家相关
+  PLAYER_CHARACTER_NOT_FOUND: 'PLAYER_CHARACTER_NOT_FOUND',
+  PLAYER_CHARACTER_EXISTS: 'PLAYER_CHARACTER_EXISTS',
+
+  // 通用
+  VALIDATION_ERROR: 'VALIDATION_ERROR',
+  NOT_FOUND: 'NOT_FOUND',
+  FORBIDDEN: 'FORBIDDEN',
+  INTERNAL_ERROR: 'INTERNAL_ERROR'
+} as const
+
+export type ErrorType = (typeof ERROR_TYPES)[keyof typeof ERROR_TYPES]
