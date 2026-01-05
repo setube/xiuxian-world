@@ -30,8 +30,8 @@
 
 1. 克隆项目
 ```bash
-git clone <repository-url>
-cd xiuxian
+git clone https://github.com/setube/xiuxian-world.git
+cd xiuxian-world
 ```
 
 2. 安装后端依赖
@@ -111,7 +111,7 @@ pnpm build
 ## 项目结构
 
 ```
-xiuxian/
+xiuxian-world/
 ├── server/                 # 后端服务
 │   ├── src/
 │   │   ├── config/        # 配置文件
